@@ -9,9 +9,10 @@ public class App {
 		
 		
 		double[][] matriz = {
-		{0, 1, 3},
-		{1, 2, 2},
-		{6, 2, 10}
+		{2, 4, 5, 6},
+		{3, 0, 7, 0},
+		{2, 1, 0, 0},
+		{0, 1, 6, 5}
 };
 		PrintMatriz.printMatriz(matriz);
 		System.out.println("----------");

@@ -1,6 +1,5 @@
 package model;
 
-import util.PrintMatriz;
 
 public class GerarMatrizInversa {
 	
@@ -24,12 +23,19 @@ public class GerarMatrizInversa {
 			return false;
 		
 		
-		// TEORICAMENTE TUDO DENTRO DE UM WHILE TRUE
+		
+		operacaoInversaoDeMatriz(matriz, 0);
+		
+		
+		
+			
+
+		
 		
 		// verifica se o 1 elemento geral é 1 se n for:
 			// verificar se tem n!=0 na primeira pos da coluna se tiver:
 				// permuta com a primeira linha
-					// se 1 elemento n for 1:
+					// se o primeiro elemento n for 1:
 						//operaçao de transformar em pivo (tranforma em 1)
 		
 		
@@ -37,65 +43,77 @@ public class GerarMatrizInversa {
 					//LOOP até estar valida
 						// verificar se a coluna está valida se n estiver:
 							// operaçao para limpar
-								// Multiplica o negativo da posicao do item errado e soma a linha do item errado.
+								// Multiplicar a 1° linha pelo inverso do primeiro elemento errado e somar na linha do elemento errado.
 						// colunaValida == True:
-							// k += 1
-					
-		
-		
-		// Ir para proxima COLUNA (j atual)
-			// verificar se tem n!=0 na primeira pos da coluna se tiver e linha 0 + k (k sendo o contador de operaçoes completas):
-					// se elemento n for 1:
-						//operaçao de transformar em pivo (tranforma em 1)
-		
-		
-					
-					//LOOP até estar valida
-						// verificar se a coluna está valida se n estiver:
-							// operaçao para limpar
-								// Multiplica o negativo da posicao do item errado e soma a linha do item errado.
-						// colunaValida == True:
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+							// Verifica se contador == matriz.length
 
-		trocaLinhaN1ParaPos1(matriz);
-		zerarColunaAbaixoDoPivo(matriz);
 		return true;
 
 	}
-
-	private static boolean gerarPivo (double[][] matriz) {
-
-		for (int i = 0; i < matriz.length; i++) {
-			for (int j = 0; j < matriz.length; j++) {
-				if (matriz[i][j] != 0 || matriz[i][j] == 1) {
-					OperacoesElementares.multiplicar(matrizIdentidade, i, 1/matriz[i][j]);
-					OperacoesElementares.multiplicar(matriz, i, 1/matriz[i][j]);
-					return true;
+	
+	
+	private static double[][] operacaoInversaoDeMatriz(double[][] matriz, int passo){
+		
+		
+		if(passo != matrizIdentidade.length) {
+			if (matriz[0][0] != 1) {
+				if (!verificarColunaValida(matriz)) {
+					trocaLinhaNumDiferenteDe0ParaPos1(matriz);
+						if (matriz[0][0] != 1) {
+							gerarPivo(matriz);
+						}
 				}
 			}
+			
+			
+			while (!verificarColunaValida(matriz)) {
+				for (int i = 1; i < matriz.length; i++) {
+					if (matriz[i][0] != 0) {
+						OperacoesElementares.multAdd(matrizIdentidade, 0, -matriz[i][0], i);
+						OperacoesElementares.multAdd(matriz, 0, -matriz[i][0], i);
+					}
+				}
+			}
+			
+			
+			double[][] matrizTemp = criarSubmatriz(matriz, 0, 0);
+			operacaoInversaoDeMatriz(matrizTemp, passo + 1);
 		}
-		return false;
+		
+		return matriz;
+		
 	}
 	
 	
-	private static boolean trocaLinhaN1ParaPos1(double[][] matriz) {
+	private static double[][] criarSubmatriz(double[][] matriz, int linhaRemovida, int colunaRemovida) {
+        int n = matriz.length;
+        double[][] submatriz = new double[n - 1][n - 1];
+        int r = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (i == linhaRemovida) continue;
+            int c = 0;
+            for (int j = 0; j < n; j++) {
+                if (j == colunaRemovida) continue;
+                submatriz[r][c++] = matriz[i][j];
+            }
+            r++;
+        }
+        return submatriz;
+    }
+	
+	
+	private static boolean gerarPivo (double[][] matriz) {
+			OperacoesElementares.multiplicar(matrizIdentidade, 0, 1/matriz[0][0]);
+			OperacoesElementares.multiplicar(matriz, 0, 1/matriz[0][0]);
+			return true;
+	}
+	
+	
+	private static boolean trocaLinhaNumDiferenteDe0ParaPos1(double[][] matriz) {
 		
 		for (int i = 0; i < matriz.length; i++) {
-			if (matriz[i][0] == 1) {
+			if (matriz[i][0] != 0) {
 				OperacoesElementares.permutar(matrizIdentidade, i, 0);
 				OperacoesElementares.permutar(matriz, i, 0);
 				return true;
@@ -118,13 +136,13 @@ public class GerarMatrizInversa {
 		return false;	
 	}
 	
-	private static boolean verificarColunaValida(double[][] matriz, int i, int j) {
+	private static boolean verificarColunaValida(double[][] matriz) {
 		
-		for (int k = 0; k < matriz.length; k++) {
-			if (matriz[i+k][j] != 1 && matriz[i+k][j] != 0)
+		for (int i = 1; i < matriz.length; i++) {
+			if (matriz[i][0] != 0)
 				return false;
 		}
 		return true;
-	}
+	} 
 
 }

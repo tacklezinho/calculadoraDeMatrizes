@@ -18,7 +18,7 @@ public class OperacoesElementares {
 	//Multiplicar todos os elementos de uma linha por um número real
 	//    
 	public static void multiplicar(double[][] matriz, int numLinha, double NumMultiplicador) {
-		for (int i = 0; i < matriz[numLinha].length; i++) {
+		for (int i = 0; i < matriz.length; i++) {
 			matriz[numLinha][i] = matriz[numLinha][i]*NumMultiplicador;
 		}
 	}
