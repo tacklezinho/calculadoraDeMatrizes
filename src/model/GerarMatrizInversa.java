@@ -1,55 +1,28 @@
 package model;
 
-import util.PrintMatriz;
+//1.    O primeiro elemento não nulo em cada linha (o pivô) deve ser 1,
+//   verifique em qual coluna deve começar o pivô e permute para a linha1.
+//
+//2. Zeros Abaixo do Pivô: Todos os elementos abaixo dos pivôs sejam zero.
+//
+//3. Avance para linha de baixo e Repita 1º e 2º até que todos os elementos 
+//   abaixo dos pivôs sejam zeros.
+//
+//4. Zeros Acima do Pivô: Todos os elementos acima de cada pivô também devem ser zero,
+//   use a última linha com método MultAdd.
+//
+//5. Avance para a linha de cima e repita o 4º até chegar na Matriz Identidade.
 
 public class GerarMatrizInversa {
 
 
 	public static double[][] matrizIdentidade;
-	public static double[][] matrizPrincipal;
-
-
-	//1. Pivôs Iguais a 1: O primeiro elemento não nulo em cada linha (o pivô) deve ser 1.
-
-	//2. Zeros Abaixo do Pivô: Todos os elementos abaixo de cada pivô devem ser zero.
-
-	//3. Zeros Acima do Pivô: Todos os elementos acima de cada pivô também devem ser zero. (Isto é o que diferencia a forma escalonada reduzida da forma escalonada simples).
-
-	//4. Linhas Nulas por Último: Se houverem linhas compostas inteiramente de zeros, elas devem estar localizadas na parte inferior da matriz.
-
 	public static boolean gerarMatrizInversa(double[][] matriz) {
 
 		matrizIdentidade = MatrizIdentidade.gerarMatrizIdentidade(matriz);
-		matrizPrincipal = matriz;
-
 		if (!VerificadorDeterminante.isInversivel(matriz))
 			return false;
-
-
-
 		operacaoInversaoDeMatriz(matriz, 0);
-
-
-
-
-
-
-
-		// verifica se o 1 elemento geral é 1 se n for:
-		// verificar se tem n!=0 na primeira pos da coluna se tiver:
-		// permuta com a primeira linha
-		// se o primeiro elemento n for 1:
-		//operaçao de transformar em pivo (tranforma em 1)
-
-
-
-		//LOOP até estar valida
-		// verificar se a coluna está valida se n estiver:
-		// operaçao para limpar
-		// Multiplicar a 1° linha pelo inverso do primeiro elemento errado e somar na linha do elemento errado.
-		// colunaValida == True:
-		// Verifica se contador == matriz.length
-
 		return true;
 
 	}
@@ -57,106 +30,109 @@ public class GerarMatrizInversa {
 
 	private static double[][] operacaoInversaoDeMatriz(double[][] matriz, int passo){
 
-		if(passo != matrizIdentidade.length) {
-			if (matriz[0][0] != 1) {
-				if (!verificarColunaValida(matriz) || matriz.length == 1) {
-					trocaLinhaNumDiferenteDe0ParaPos1(matriz);
-					if (matriz[0][0] != 1) {
-						gerarPivo(matriz);
+		// while faz a limpeza de baixo
+		while (passo != matrizIdentidade.length) {
+			System.out.println("passo está valendo "+passo);
+			// verifica o começo da linha na coluna
+			if (matriz[passo][passo] != 1) {
+				// se n for valida, então verifica se precisa permutar,
+				//  caso ñ permute então geramos pivo
+				if (!verificarColunaAbaixoValida(matriz, passo)) {
+					if (matriz[passo][passo] == 0) {
+						trocaLinhaNumDiferenteDe0(matriz, passo);
 					}
+					gerarPivo(matriz, passo);
+				}
+				// se for valida então resta apenas ajeitar o pivo
+				else {
+					gerarPivo(matriz, passo);
 				}
 			}
+			// Zera todos os elementos abaixo do pivô
+			zerarColunaAbaixoDoPivo(matriz, passo);
 
-
-			while (!verificarColunaValida(matriz)) {
-				for (int i = 1; i < matriz.length; i++) {
-					if (matriz[i][0] != 0) {
-						OperacoesElementares.multAdd(matrizIdentidade, 0, -matriz[i][0], i);
-						OperacoesElementares.multAdd(matriz, 0, -matriz[i][0], i);
-					}
-				}
-			}
-
-
-			double[][] matrizTemp = operacaoInversaoDeMatriz(criarSubmatriz(matriz, 0, 0), passo + 1);
-
-			if (matrizTemp.length != 1 && matrizTemp.length != 0) {
-				int k = matrizTemp.length;
-				for (int i = (matriz.length); i >= matrizTemp.length; i--) {
-					int x = matrizTemp.length;
-
-					for (int j = (matriz.length); j >= matrizTemp.length; j--) {	
-
-						matrizPrincipal[i-1][j-1] = matrizTemp[k-1][x-1];
-						x--;
-					}
-					k--;
-
-				}
-			}
+			// contador de linhas
+			passo += 1;
 		}
+		System.out.println("--------------------------");
+		System.out.println("começando processo de baixo pra cima");
+		passo -=1;
+
+		// while faz a limpeza de cima	
+		while (passo != 0) {
+			System.out.println("passo está valendo "+passo);
+			// Zera todos os elementos acima do pivô
+			zerarColunaAcimaDoPivo(matriz, passo);
+			// contador de linhas, agora é o inverso,
+			passo -= 1;
+		}
+
+		// saiu dos whiles, devidamente filtrado
 		return matriz;
 	}
 
-
-
-	private static double[][] criarSubmatriz(double[][] matriz, int linhaRemovida, int colunaRemovida) {
-
-		int n = matriz.length;
-		double[][] submatriz = new double[n - 1][n - 1];
-		int r = 0;
-
-		for (int i = 0; i < n; i++) {
-			if (i == linhaRemovida) continue;
-			int c = 0;
-			for (int j = 0; j < n; j++) {
-				if (j == colunaRemovida) continue;
-				submatriz[r][c++] = matriz[i][j];
-			}
-			r++;
-		}
-		return submatriz;
-	}
-
-
-	private static boolean gerarPivo (double[][] matriz) {
-		OperacoesElementares.multiplicar(matrizIdentidade, 0, 1/matriz[0][0]);
-		OperacoesElementares.multiplicar(matriz, 0, 1/matriz[0][0]);
+	private static boolean gerarPivo (double[][] matriz, int indice) {
+		OperacoesElementares.multiplicar(matrizIdentidade, indice, 1/matriz[indice][indice]);
+		OperacoesElementares.multiplicar(matriz, indice, 1/matriz[indice][indice]);
 		return true;
 	}
 
 
-	private static boolean trocaLinhaNumDiferenteDe0ParaPos1(double[][] matriz) {
+	private static boolean trocaLinhaNumDiferenteDe0(double[][] matriz, int passo) {
 
-		for (int i = 0; i < matriz.length; i++) {
-			if (matriz[i][0] != 0) {
-				OperacoesElementares.permutar(matrizIdentidade, i, 0);
-				OperacoesElementares.permutar(matriz, i, 0);
+		for (int i = passo; i < matriz.length; i++) {
+			if (matriz[i] == null)
+				return true;
+			if (matriz[passo+1][passo] != 0) {
+				OperacoesElementares.permutar(matrizIdentidade, passo+1, passo);
+				OperacoesElementares.permutar(matriz, passo+1, passo);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private static boolean zerarColunaAbaixoDoPivo(double[][] matriz) {
+	private static boolean zerarColunaAbaixoDoPivo(double[][] matriz, int passo) {
 
-		for (int i = 0; i < matriz.length; i++) {
-			for (int j = 0; j < matriz.length; j++) {
-				if (matriz[j][i] != 1) {
-					OperacoesElementares.multAdd(matrizIdentidade, j, -matriz[j+1][i+1], j+1);
-					OperacoesElementares.multAdd(matriz, j, -matriz[j+1][i+1], j+1);
-					return true;
+		while (!verificarColunaAbaixoValida(matriz, passo)) {
+			for (int i = passo+1; i < matriz.length; i++) {
+				if (matriz[i][passo] != 0) {
+					OperacoesElementares.multAdd(matrizIdentidade, passo, -matriz[i][passo], i);
+					OperacoesElementares.multAdd(matriz, passo, -(matriz[i][passo]), i);
 				}
 			}
+			return true;
 		}
-		return false;	
+		return false;
+	}
+	private static boolean zerarColunaAcimaDoPivo(double[][] matriz, int passo) {
+
+		while (!verificarColunaAcimaValida(matriz, passo)) {
+			for (int i = passo-1; i >= 0; i--) {
+				if (matriz[i][passo] != 0) {
+					OperacoesElementares.multAdd(matrizIdentidade, passo, -matriz[i][passo], i);
+					OperacoesElementares.multAdd(matriz, passo, -(matriz[i][passo]), i);
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
-	private static boolean verificarColunaValida(double[][] matriz) {
-
-		for (int i = 1; i < matriz.length; i++) {
-			if (matriz[i][0] != 0)
+	private static boolean verificarColunaAbaixoValida(double[][] matriz, int passo) {
+		for (int i = passo; i < matriz.length; i++) {
+			if (matriz[i][i] != 0)
 				return false;
+
+		}
+		return true;
+	}
+
+	private static boolean verificarColunaAcimaValida(double[][] matriz, int passo) {
+		for (int i = passo-1; i >= 0; i--) {
+			if (matriz[i][passo] != 0)
+				return false;
+
 		}
 		return true;
 	} 
