@@ -9,17 +9,19 @@ public class App {
 		
 		
 		double[][] matriz = {
-		{2, 4, 5, 6},
-		{3, 0, 7, 0},
-		{2, 1, 0, 0},
-		{0, 1, 6, 5}
+		{2, 4, 5},
+		{3, 0, 7},
+		{2, 1, 0}
 };
+		
+		
+		
 		PrintMatriz.printMatriz(matriz);
 		System.out.println("----------");
 		
 		
 		GerarMatrizInversa.gerarMatrizInversa(matriz);
-		PrintMatriz.printMatriz(matriz);
+		PrintMatriz.printMatriz(GerarMatrizInversa.matrizPrincipal);
 		System.out.println("----------");
 		PrintMatriz.printMatriz(GerarMatrizInversa.matrizIdentidade);
 		
