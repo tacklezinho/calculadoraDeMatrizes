@@ -1,9 +1,10 @@
 package model;
 
+import util.PrintMatriz;
+
 public class OperacoesElementares {
 
 	private static double[][] createMatrizTemp(double[][] matriz) {
-		
 		// Criando uma matriz temporária para não alterar a original
 		double[][] matrizTemp = new double[matriz.length][];
 		for (int i = 0; i < matriz.length; i++) {
@@ -23,30 +24,22 @@ public class OperacoesElementares {
 		linha2 -= 1;
 		
 		double[][] matrizTemp = createMatrizTemp(matriz);
-		
-		// Matriz identidade
-		double[][] matrizTempID = createMatrizTemp(GerarMatrizInversa.matrizIdentidade);
-		
+//		double[][] matrizTemp2 = createMatrizTemp(GerarMatrizInversa.matrizIdentidade);
 		matriz[linha1] = matrizTemp[linha2];
 		matriz[linha2] = matrizTemp[linha1];
-		
-		// Matriz identidade
-		GerarMatrizInversa.matrizIdentidade[linha1] = matrizTempID[linha2];
-		GerarMatrizInversa.matrizIdentidade[linha2] = matrizTempID[linha1];
+//		GerarMatrizInversa.matrizIdentidade[linha1] = matrizTemp2[linha2];
+//		GerarMatrizInversa.matrizIdentidade[linha2] = matrizTemp2[linha1];
 		
 	}
 
 	//Multiplicar todos os elementos de uma linha por um número real
+	//    , double[][] matrizID
 	public static void multiplicar(double[][] matriz, int numLinha, double NumMultiplicador) {
 		numLinha += 1;
 		System.out.println("Linha: "+ numLinha +" -> Multiplicada por "+NumMultiplicador);
 		numLinha -= 1;
 		for (int i = 0; i < matriz[numLinha].length; i++) {
 			matriz[numLinha][i] = matriz[numLinha][i]*NumMultiplicador;
-		}
-		// Matriz identidade
-		for (int i = 0; i < matriz[numLinha].length; i++) {
-			GerarMatrizInversa.matrizIdentidade[numLinha][i] = GerarMatrizInversa.matrizIdentidade[numLinha][i]*NumMultiplicador;
 		}
 
 	}
@@ -62,7 +55,6 @@ public class OperacoesElementares {
 		numLinha2 -= 1;
 		
 		double [][] matrizTemp = createMatrizTemp(matriz);
-		double[][] matrizTempID = createMatrizTemp(GerarMatrizInversa.matrizIdentidade);
 		
 		for (int i = 0; i < matrizTemp.length; i++) {
 			matrizTemp[numLinha1][i] *= numMultiplicador;

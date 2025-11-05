@@ -16,7 +16,6 @@ package model;
 public class GerarMatrizInversa {
 
 	public static double[][] matrizIdentidade;
-	
 	public static boolean gerarMatrizInversa(double[][] matriz) {
 
 		matrizIdentidade = MatrizIdentidade.gerarMatrizIdentidade(matriz);
@@ -56,7 +55,6 @@ public class GerarMatrizInversa {
 		}
 		System.out.println("--------------------------");
 		System.out.println("começando processo de baixo pra cima");
-		System.out.println("--------------------------");
 		passo -=1;
 
 		// while faz a limpeza de cima	
@@ -73,6 +71,7 @@ public class GerarMatrizInversa {
 	}
 
 	private static boolean gerarPivo (double[][] matriz, int indice) {
+		OperacoesElementares.multiplicar(matrizIdentidade, indice, 1/matriz[indice][indice]);
 		OperacoesElementares.multiplicar(matriz, indice, 1/matriz[indice][indice]);
 		return true;
 	}
@@ -80,40 +79,48 @@ public class GerarMatrizInversa {
 
 	private static boolean trocaLinhaNumDiferenteDe0(double[][] matriz, int passo) {
 
-		for (int i = passo + 1; i < matriz.length; i++) {
+		for (int i = passo; i < matriz.length; i++) {
 			if (matriz[i] == null)
 				return true;
-			if (matriz[i][passo] != 0) {
-				OperacoesElementares.permutar(matriz, i, passo);
+			if (matriz[passo+1][passo] != 0) {
+				OperacoesElementares.permutar(matrizIdentidade, passo+1, passo);
+				OperacoesElementares.permutar(matriz, passo+1, passo);
 				return true;
 			}
 		}
 		return false;
 	}
+
 	private static boolean zerarColunaAbaixoDoPivo(double[][] matriz, int passo) {
-		for (int i = passo + 1; i < matriz.length; i++) {
-			if (matriz[i][passo] != 0) {
-				double multiplicador = -matriz[i][passo];
-				OperacoesElementares.multAdd(matriz, passo, multiplicador, i); 
+
+		while (!verificarColunaAbaixoValida(matriz, passo)) {
+			for (int i = passo+1; i < matriz.length; i++) {
+				if (matriz[i][passo] != 0) {
+					OperacoesElementares.multAdd(matrizIdentidade, passo, -matriz[i][passo], i);
+					OperacoesElementares.multAdd(matriz, passo, -(matriz[i][passo]), i);
+				}
 			}
+			return true;
 		}
-		return true; // A limpeza foi tentada (agora o loop percorre a coluna inteira)
+		return false;
 	}
 	private static boolean zerarColunaAcimaDoPivo(double[][] matriz, int passo) {
 
 		while (!verificarColunaAcimaValida(matriz, passo)) {
 			for (int i = passo-1; i >= 0; i--) {
 				if (matriz[i][passo] != 0) {
+					OperacoesElementares.multAdd(matrizIdentidade, passo, -matriz[i][passo], i);
 					OperacoesElementares.multAdd(matriz, passo, -(matriz[i][passo]), i);
 				}
 			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	private static boolean verificarColunaAbaixoValida(double[][] matriz, int passo) {
-		for (int i = passo + 1; i < matriz.length; i++) {
-			if (matriz[i][passo] != 0)
+		for (int i = passo; i < matriz.length; i++) {
+			if (matriz[i][i] != 0)
 				return false;
 
 		}
