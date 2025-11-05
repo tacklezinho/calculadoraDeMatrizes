@@ -15,123 +15,139 @@ package model;
 
 public class GerarMatrizInversa {
 
+
 	public static double[][] matrizIdentidade;
+
 	public static boolean gerarMatrizInversa(double[][] matriz) {
 
+		// Gera a matriz identidade com mesmo tamanho da matriz original
 		matrizIdentidade = MatrizIdentidade.gerarMatrizIdentidade(matriz);
+
+		// Verifica se a matriz é inversível (determinante ≠ 0)
 		if (!VerificadorDeterminante.isInversivel(matriz))
 			return false;
+
+		// Executa o processo de inversão (eliminação de Gauss-Jordan)
 		operacaoInversaoDeMatriz(matriz, 0);
 		return true;
-
 	}
 
-	// PRINCIPAL FUNÇÃO
+	// Função principal que realiza as operações de inversão da matriz
 	private static double[][] operacaoInversaoDeMatriz(double[][] matriz, int passo){
 
-		// while faz a limpeza de baixo
+		// Loop para eliminar os elementos abaixo dos pivôs (parte inferior da matriz)
 		while (passo != matrizIdentidade.length) {
 			System.out.println("passo está valendo "+passo);
-			// verifica o começo da linha na coluna
+
+			// Verifica se o elemento na diagonal principal (pivô) é 1
 			if (matriz[passo][passo] != 1) {
-				// se n for valida, então verifica se precisa permutar,
-				//  caso ñ permute então geramos pivo
+
+				// Caso não seja 1, verifica se precisa permutar linhas
 				if (!verificarColunaAbaixoValida(matriz, passo)) {
+					// Se o elemento for zero, procura outra linha para trocar
 					if (matriz[passo][passo] == 0) {
 						trocaLinhaNumDiferenteDe0(matriz, passo);
 					}
+					// Após possível troca, gera o pivô
 					gerarPivo(matriz, passo);
 				}
-				// se for valida então resta apenas ajeitar o pivo
+				// Caso a coluna abaixo esteja válida, apenas gera o pivô
 				else {
 					gerarPivo(matriz, passo);
 				}
 			}
+
 			// Zera todos os elementos abaixo do pivô
 			zerarColunaAbaixoDoPivo(matriz, passo);
 
-			// contador de linhas
+			// Avança para a próxima linha
 			passo += 1;
 		}
+
 		System.out.println("--------------------------");
 		System.out.println("começando processo de baixo pra cima");
+		System.out.println("--------------------------");
+
+		// Volta uma linha (último índice da matriz)
 		passo -=1;
 
-		// while faz a limpeza de cima	
+		// Loop para eliminar os elementos acima dos pivôs (parte superior da matriz)
 		while (passo != 0) {
 			System.out.println("passo está valendo "+passo);
 			// Zera todos os elementos acima do pivô
 			zerarColunaAcimaDoPivo(matriz, passo);
-			// contador de linhas, agora é o inverso,
+			// Retrocede uma linha
 			passo -= 1;
 		}
 
-		// saiu dos whiles, devidamente filtrado
+		// Retorna a matriz transformada (inversa)
 		return matriz;
 	}
 
+	// Gera o pivô dividindo a linha pelo valor do pivô atual
 	private static boolean gerarPivo (double[][] matriz, int indice) {
-		OperacoesElementares.multiplicar(matrizIdentidade, indice, 1/matriz[indice][indice]);
 		OperacoesElementares.multiplicar(matriz, indice, 1/matriz[indice][indice]);
 		return true;
 	}
 
-
+	// Troca a linha atual por outra que possua elemento diferente de zero na coluna do pivô
 	private static boolean trocaLinhaNumDiferenteDe0(double[][] matriz, int passo) {
 
-		for (int i = passo; i < matriz.length; i++) {
+		for (int i = passo + 1; i < matriz.length; i++) {
 			if (matriz[i] == null)
 				return true;
-			if (matriz[passo+1][passo] != 0) {
-				OperacoesElementares.permutar(matrizIdentidade, passo+1, passo);
-				OperacoesElementares.permutar(matriz, passo+1, passo);
+			if (matriz[i][passo] != 0) {
+				// Permuta as linhas (i ↔ passo)
+				OperacoesElementares.permutar(matriz, i, passo);
 				return true;
 			}
 		}
 		return false;
 	}
 
+	// Zera todos os elementos abaixo do pivô (eliminação direta)
 	private static boolean zerarColunaAbaixoDoPivo(double[][] matriz, int passo) {
-
-		while (!verificarColunaAbaixoValida(matriz, passo)) {
-			for (int i = passo+1; i < matriz.length; i++) {
-				if (matriz[i][passo] != 0) {
-					OperacoesElementares.multAdd(matrizIdentidade, passo, -matriz[i][passo], i);
-					OperacoesElementares.multAdd(matriz, passo, -(matriz[i][passo]), i);
-				}
+		for (int i = passo + 1; i < matriz.length; i++) {
+			if (matriz[i][passo] != 0) {
+				// Calcula o multiplicador necessário para zerar o elemento
+				double multiplicador = -matriz[i][passo];
+				// Aplica operação: linha_i = linha_i + multiplicador * linha_passo
+				OperacoesElementares.multAdd(matriz, passo, multiplicador, i); 
 			}
-			return true;
 		}
-		return false;
+		// Retorna verdadeiro, indicando que a coluna foi processada
+		return true;
 	}
+
+	// Zera todos os elementos acima do pivô (eliminação reversa)
 	private static boolean zerarColunaAcimaDoPivo(double[][] matriz, int passo) {
 
+		// Continua enquanto existirem elementos não nulos acima do pivô
 		while (!verificarColunaAcimaValida(matriz, passo)) {
 			for (int i = passo-1; i >= 0; i--) {
 				if (matriz[i][passo] != 0) {
-					OperacoesElementares.multAdd(matrizIdentidade, passo, -matriz[i][passo], i);
+					// Elimina o valor aplicando operação inversa
 					OperacoesElementares.multAdd(matriz, passo, -(matriz[i][passo]), i);
 				}
 			}
-			return true;
-		}
-		return false;
-	}
-
-	private static boolean verificarColunaAbaixoValida(double[][] matriz, int passo) {
-		for (int i = passo; i < matriz.length; i++) {
-			if (matriz[i][i] != 0)
-				return false;
-
 		}
 		return true;
 	}
 
+	// Verifica se todos os elementos abaixo do pivô são zero
+	private static boolean verificarColunaAbaixoValida(double[][] matriz, int passo) {
+		for (int i = passo + 1; i < matriz.length; i++) {
+			if (matriz[i][passo] != 0)
+				return false;
+		}
+		return true;
+	}
+
+	// Verifica se todos os elementos acima do pivô são zero
 	private static boolean verificarColunaAcimaValida(double[][] matriz, int passo) {
 		for (int i = passo-1; i >= 0; i--) {
 			if (matriz[i][passo] != 0)
 				return false;
-
 		}
 		return true;
 	} 
