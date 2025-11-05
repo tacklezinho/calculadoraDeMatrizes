@@ -15,7 +15,6 @@ package model;
 
 public class GerarMatrizInversa {
 
-
 	public static double[][] matrizIdentidade;
 	public static boolean gerarMatrizInversa(double[][] matriz) {
 
@@ -27,7 +26,7 @@ public class GerarMatrizInversa {
 
 	}
 
-
+	// PRINCIPAL FUNÇÃO
 	private static double[][] operacaoInversaoDeMatriz(double[][] matriz, int passo){
 
 		// while faz a limpeza de baixo

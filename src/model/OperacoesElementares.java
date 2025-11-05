@@ -64,6 +64,16 @@ public class OperacoesElementares {
 			double valorLinhaElemento = matrizTemp[numLinha1][i];
 			matriz[numLinha2][i] += valorLinhaElemento;
 		}
+		
+		// Matriz identidade
+		for (int i = 0; i < matrizTempID.length; i++) {
+			matrizTempID[numLinha1][i] *= numMultiplicador;
+		}
+
+		for (int i = 0; i < matrizTempID.length; i++) {
+			double valorLinhaElemento = matrizTempID[numLinha1][i];
+			GerarMatrizInversa.matrizIdentidade[numLinha2][i] += valorLinhaElemento;
+		}
 
 	}
 
