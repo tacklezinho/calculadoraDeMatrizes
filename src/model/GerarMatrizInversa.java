@@ -37,7 +37,6 @@ public class GerarMatrizInversa {
 
 		// Loop para eliminar os elementos abaixo dos pivôs (parte inferior da matriz)
 		while (passo != matrizIdentidade.length) {
-			System.out.println("passo está valendo "+passo);
 
 			// Verifica se o elemento na diagonal principal (pivô) é 1
 			if (matriz[passo][passo] != 1) {
@@ -64,16 +63,11 @@ public class GerarMatrizInversa {
 			passo += 1;
 		}
 
-		System.out.println("--------------------------");
-		System.out.println("começando processo de baixo pra cima");
-		System.out.println("--------------------------");
-
 		// Volta uma linha (último índice da matriz)
 		passo -=1;
 
 		// Loop para eliminar os elementos acima dos pivôs (parte superior da matriz)
 		while (passo != 0) {
-			System.out.println("passo está valendo "+passo);
 			// Zera todos os elementos acima do pivô
 			zerarColunaAcimaDoPivo(matriz, passo);
 			// Retrocede uma linha

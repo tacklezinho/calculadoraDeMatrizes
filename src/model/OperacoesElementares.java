@@ -20,11 +20,7 @@ public class OperacoesElementares {
 	// Troca (permuta) as posições de duas linhas da matriz
 	public static void permutar(double[][] matriz, int linha1, int linha2) {
 		// Exibe no console quais linhas estão sendo trocadas (com contagem iniciando em 1 para exibição)
-		linha1 += 1;
-		linha2 += 1;
-		System.out.println("Linha: "+ linha1 +" -> Trocada pela linha: "+ linha2 +"");
-		linha1 -= 1;
-		linha2 -= 1;
+		PrintMatriz.passoApassoPermuta(matriz, linha1, linha2);
 		
 		// Cria cópias temporárias da matriz principal e da matriz identidade
 		double[][] matrizTemp = createMatrizTemp(matriz);
@@ -42,9 +38,7 @@ public class OperacoesElementares {
 	// Multiplica todos os elementos de uma linha por um número real
 	public static void multiplicar(double[][] matriz, int numLinha, double NumMultiplicador) {
 		// Mostra no console a operação realizada
-		numLinha += 1;
-		System.out.println("Linha: "+ numLinha +" -> Multiplicada por "+DecimalParaFracao.transformarEmFracao(NumMultiplicador));
-		numLinha -= 1;
+		PrintMatriz.passoApassoMult(matriz, numLinha, NumMultiplicador);
 
 		// Multiplica todos os elementos da linha na matriz principal
 		for (int i = 0; i < matriz[numLinha].length; i++) {
@@ -61,12 +55,7 @@ public class OperacoesElementares {
 	// Multiplica uma linha por um número real e adiciona o resultado a outra linha (numLinha2)
 	public static void multAdd(double[][] matriz, int numLinha1, double numMultiplicador, int numLinha2) {
 		// Exibe no console o processo de multiplicação e soma
-		numLinha1 += 1;
-		numLinha2 += 1;
-		System.out.println("Linha: "+ numLinha1 +" -> Multiplicada por "+DecimalParaFracao.transformarEmFracao(numMultiplicador)+
-				" e somada à linha: "+ numLinha2 +"");
-		numLinha1 -= 1;
-		numLinha2 -= 1;
+		PrintMatriz.passoApassoMultAdd(matriz, numLinha1, numMultiplicador, numLinha2);
 		
 		// Cria cópias temporárias da matriz principal e da identidade
 		double [][] matrizTemp = createMatrizTemp(matriz);

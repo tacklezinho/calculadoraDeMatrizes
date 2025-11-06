@@ -32,7 +32,7 @@ public class InputMatriz {
             System.out.println();
         }
         scanner.close();
-        System.out.println("Matriz gerada com sucesso!");
+        System.out.println("Matriz gerada com sucesso!\n");
         return matriz;
 
 
