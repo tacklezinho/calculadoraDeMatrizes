@@ -1,50 +1,49 @@
 package app;
 
+
+
 import model.GerarMatrizInversa;
-import util.DecimalParaFracao;
+import util.InputMatriz;
 import util.PrintMatriz;
 
+
+
+
 public class App {
+	
+	
+	
+
+		
+	
 
 	public static void main(String[] args) {
 		
 		
-		double[][] matriz = {
-		{0, 10, 0},
-		{1, 8, 6},
-		{2, 1, 0}
-};
 		
 		
-	
+//		double[][] matriz = {
+//				{1, 2, 4},
+//				{6, 9, 0},
+//				{0, 2, 4}
+//		};
 		
-		PrintMatriz.printMatriz(matriz);
-		System.out.println("----------");
-		
-		
-		System.out.println(GerarMatrizInversa.gerarMatrizInversa(matriz));
-		PrintMatriz.printMatriz(matriz);
-		System.out.println("----------");
-		PrintMatriz.printMatriz(GerarMatrizInversa.matrizIdentidade);
+		double[][] matriz = InputMatriz.inputMatriz();
 		
 		
-//		if (matriz[0].length != matriz.length)
-//			System.out.println("Não é quadrada");
-		
-//		PrintMatriz.printMatriz(MatrizIdentidade.gerarMatrizIdentidade(matriz));
-		
-		
-		
-//		System.out.println(VerificadorDeterminante.isInversa(matriz));
-		
-
-		
-		
-//		PrintMatriz.printMatriz(MatrizIdentidade.gerarMatrizIdentidade(matriz2));
-	
-		
-//		System.out.println(VerificadorDeterminante.isInversa(matriz2));
-		
+    
+        if (GerarMatrizInversa.gerarMatrizInversa(matriz)) {
+	        System.out.println("| =================== |\n|  Matriz Identidade  |\nV =================== V ");
+	        System.out.println();
+	        PrintMatriz.printMatriz(matriz);
+	        System.out.println();
+	        System.out.println("| ================== |\n|   Matriz Inversa   |\nV ================== V ");
+	        System.out.println();
+	        PrintMatriz.printMatriz(GerarMatrizInversa.matrizIdentidade);
+	        } else {
+	        	System.out.println("\n O determinante desta matriz será zero, então a matriz é não invertível");
+	        }
+	        
 		
 	}
 

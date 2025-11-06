@@ -1,5 +1,8 @@
 package model;
 
+import util.DecimalParaFracao;
+import util.PrintMatriz;
+
 public class OperacoesElementares {
 
 	// Cria uma cópia temporária da matriz para evitar modificar a original diretamente
@@ -40,7 +43,7 @@ public class OperacoesElementares {
 	public static void multiplicar(double[][] matriz, int numLinha, double NumMultiplicador) {
 		// Mostra no console a operação realizada
 		numLinha += 1;
-		System.out.println("Linha: "+ numLinha +" -> Multiplicada por "+NumMultiplicador);
+		System.out.println("Linha: "+ numLinha +" -> Multiplicada por "+DecimalParaFracao.transformarEmFracao(NumMultiplicador));
 		numLinha -= 1;
 
 		// Multiplica todos os elementos da linha na matriz principal
@@ -60,7 +63,7 @@ public class OperacoesElementares {
 		// Exibe no console o processo de multiplicação e soma
 		numLinha1 += 1;
 		numLinha2 += 1;
-		System.out.println("Linha: "+ numLinha1 +" -> Multiplicada por "+numMultiplicador+
+		System.out.println("Linha: "+ numLinha1 +" -> Multiplicada por "+DecimalParaFracao.transformarEmFracao(numMultiplicador)+
 				" e somada à linha: "+ numLinha2 +"");
 		numLinha1 -= 1;
 		numLinha2 -= 1;
